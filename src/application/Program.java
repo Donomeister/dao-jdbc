@@ -1,10 +1,14 @@
 package application;
 
+import model.entities.Department;
+
 public class Program {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		Department db = new Department(10, "Luan");
+		
+		System.out.println(db);
 	}
 
 }

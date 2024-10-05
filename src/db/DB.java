@@ -1,10 +1,10 @@
 package db;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,6 +15,7 @@ public class DB {
 	public static Connection conn = null;
 	
 	public static Connection getConnection(){
+		
 		if(conn != null) {
 			try {
 				Properties props = loadProperties();
@@ -29,6 +30,16 @@ public class DB {
 		return conn;
 	}
 	
+	public static void  closeConnection() {
+		if(conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				throw new DBException(e.getMessage());
+			}
+		}
+	}
+	
 	private static Properties loadProperties() {
 		Properties props = new Properties();
 		
@@ -37,13 +48,40 @@ public class DB {
 			props.load(fs);
 			return props;
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		
+		}catch (IOException e) {
+			throw new DBException(e.getMessage());
 		}
-		
-		
-		return props;
 	}
+	
+	public static void closeStatement(Statement st) {
+		if (st != null) {
+			try {
+				st.close();
+			} catch (SQLException e) {
+				throw new DBException(e.getMessage());
+			}
+		}
+	}
+
+	public static void closeResultSet(ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				throw new DBException(e.getMessage());
+			}
+		}
+	}
+	
+	public static void closePreparedStatement(PreparedStatement st) {
+		if (st != null) {
+			try {
+				st.close();
+			} catch (SQLException e) {
+				throw new DBException(e.getMessage());
+			}
+		}
+	}
+
 }

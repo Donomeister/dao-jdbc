@@ -16,15 +16,15 @@ public class DB {
 	
 	public static Connection getConnection(){
 		
-		if(conn != null) {
+		if(conn == null) {
 			try {
 				Properties props = loadProperties();
 		
-				String DBurl = props.getProperty("DBurl");
+				String url = props.getProperty("dburl");
 			
-				conn = DriverManager.getConnection(DBurl, props);
+				conn = DriverManager.getConnection(url, props);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 		return conn;
@@ -41,10 +41,9 @@ public class DB {
 	}
 	
 	private static Properties loadProperties() {
-		Properties props = new Properties();
 		
 		try(FileInputStream fs = new FileInputStream("DB.properties")){
-			
+			Properties props = new Properties();
 			props.load(fs);
 			return props;
 			

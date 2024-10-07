@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import db.DB;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
@@ -43,9 +44,9 @@ public class SellerDaoJDBC implements SellerDao {
 		
 		try {
 			st = conn.prepareStatement(
-					"SELECT seller.*,department.Name as DepName"
-					+ "FROM seller INNER JOIN department"
-					+ "ON seller.DepartmentId = department.Id"
+					"SELECT seller.*,department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
 					+ "WHERE seller.Id = ?");
 			
 			st.setInt(1, id);
@@ -70,6 +71,10 @@ public class SellerDaoJDBC implements SellerDao {
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			DB.closePreparedStatement(st);
+			DB.closeConnection();
 		}
 		return null;
 	}

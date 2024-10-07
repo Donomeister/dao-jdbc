@@ -2,16 +2,17 @@ package application;
 
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
-import model.entities.Department;
+import model.entities.Seller;
 
 public class Program {
 
 	public static void main(String[] args) {
 		
-		Department db = new Department(10, "Luan");
+		SellerDao sellerdao = DaoFactory.createSellerDao();
 		
+		Seller seller = sellerdao.findById(3);
 		
-		System.out.println(db);
+		System.out.println(seller);
 	}
 
 }

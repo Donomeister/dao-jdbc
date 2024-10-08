@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import db.DB;
+import db.DBException;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
@@ -24,8 +25,41 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void insert(Seller seller) {
-		// TODO Auto-generated method stub
-		
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+					"INSERT INTO seller "
+					+"(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+"VALUES "
+					+"(?, ?, ?, ?, ?)", 
+					st.RETURN_GENERATED_KEYS);
+			
+			st.setString(1, seller.getName());
+			st.setString(2, seller.getEmail());
+			st.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+			st.setDouble(4, seller.getBaseSalary());
+			st.setInt(5, seller.getDepartment().getId());
+			
+			int rows = st.executeUpdate();
+			
+			if(rows > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				if(rs.next()) {
+					int id = rs.getInt(1);
+					seller.setId(id);
+					DB.closeResultSet(rs);
+				}
+			}
+			else {
+				throw new DBException("Unexpected error! No rows affected");
+			}
+		}
+		catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		finally {
+			DB.closePreparedStatement(st);
+		}
 	}
 
 	@Override
@@ -178,7 +212,7 @@ public class SellerDaoJDBC implements SellerDao {
 		}
 		finally {
 			DB.closePreparedStatement(st);
-			DB.closeConnection();
+			//DB.closeConnection();
 		}
 		return list;
 	}

@@ -29,11 +29,11 @@ public class Program {
 		
 		System.out.println("======================================");
 
-		List<Seller> l = sellerdao.findAll();
+		Seller newSeller = s;
+		s.setName("Luanzeira");
+		s.setId(1);
 		
-		for(Seller a : l) {
-			System.out.println(a);
-		}
+		sellerdao.update(newSeller);
 		
 	}
 
